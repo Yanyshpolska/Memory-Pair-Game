@@ -8,8 +8,10 @@ const gameCards = [
   { id: 6, link: "./img/06.jpg", alt: "Hibiscus" },
 ];
 
+const arrayOfCards = [...gameCards, ...gameCards];
+
 const newGame = function () {
-  const arrayOfCards = [...gameCards, ...gameCards].sort(function () {
+  arrayOfCards.sort(function () {
     return 0.5 - Math.random();
   });
 
@@ -17,11 +19,9 @@ const newGame = function () {
   gameArea.innerHTML = "";
 
   for (let card of arrayOfCards) {
-    const cardHolder = document.createElement("div");
-    cardHolder.classList.add("game__card__holder");
-
     const gameCard = document.createElement("div");
     gameCard.classList.add("game__card");
+    gameCard.style["transform"] = "rotateY(0deg)"; //// try to delete
 
     const cardFront = document.createElement("img");
     cardFront.classList.add("game__card-front");
@@ -31,41 +31,94 @@ const newGame = function () {
     const cardBack = document.createElement("img");
     cardBack.classList.add("game__card-back");
     cardBack.setAttribute("alt", "???");
-    cardBack.setAttribute("src", "./img/origin3.jpg");
+    cardBack.setAttribute("src", "./img/back.jpg");
     cardBack.setAttribute("data-id", `${card.id}`);
 
     gameCard.append(cardBack);
     gameCard.append(cardFront);
-    cardHolder.append(gameCard);
-    gameArea.append(cardHolder);
+    gameArea.append(gameCard);
   }
 };
 
 const pressButton = document.querySelector(".container__new-game");
 pressButton.addEventListener("click", newGame);
+newGame();
 
 const listOfCardsPositions = document.querySelector(".game");
 
-// console.log(listOfCardsPositions);
-let numberOpenedCards = 0;
+let isSecondCard = false;
+let lockGameProgress = false;
+let firstCardID;
 
-const flipCard = function (event) {
+function flip(cardId) {
+  console.log(cardId);
+
+  console.log(listOfCardsPositions.childNodes[cardId]);
+
+  listOfCardsPositions.childNodes[cardId].style["transform"] =
+    listOfCardsPositions.childNodes[cardId].style["transform"] ===
+    "rotateY(-180deg)"
+      ? "rotateY(0deg)"
+      : "rotateY(-180deg)";
+}
+
+function clickCard(event) {
+  if (lockGameProgress) {
+    return;
+  }
   if (event.target.dataset.id === undefined) {
     return;
   }
-  //   if (numberOpenedCards >= 2) {
-  //     return;
-  //   }
-  //   numberOpenedCards += 1;
-  const objectTea = gameCards.find(
-    (obj) => obj.id === Number(event.target.dataset.id)
-  );
-  event.target.parentElement.style["transform"] = "rotateY(-180deg)";
-  //   console.log(event.target.parentElement);
-  //   console.log(event.target);
-  //   console.log(objectTea);
+  const currentCardId = Array.from(
+    event.target.parentElement.parentElement.children
+  ).indexOf(event.target.parentElement);
 
-  //   createContent(objectTea);
-};
+  if (isSecondCard) {
+    flip(currentCardId);
+    isSecondCard = false;
+    lockGameProgress = true;
 
-listOfCardsPositions.addEventListener("click", flipCard);
+    if (compareCards(firstCardID, currentCardId)) {
+      setTimeout(changeOpacity, 1000);
+    } else {
+      setTimeout(flipBack, 1000);
+    }
+  } else {
+    isSecondCard = true;
+    firstCardID = currentCardId;
+    flip(currentCardId);
+  }
+}
+
+function compareCards(firstCardID, currentCardId) {
+  return listOfCardsPositions.childNodes[firstCardID].childNodes[0].dataset
+    .id ===
+    listOfCardsPositions.childNodes[currentCardId].childNodes[0].dataset.id
+    ? true
+    : false;
+}
+function changeOpacity() {
+  const cardsArray = Array.from(listOfCardsPositions.childNodes);
+  cardsArray.map((child) => {
+    if (child.style["transform"] === "rotateY(-180deg)") {
+      child.style["opacity"] = "0.5";
+    }
+  });
+  lockGameProgress = false;
+}
+
+function flipBack() {
+  const cardsArray = Array.from(listOfCardsPositions.childNodes);
+
+  cardsArray.map((child, index) => {
+    if (
+      child.style["transform"] === "rotateY(-180deg)" &&
+      child.style["opacity"] !== "0.5"
+    ) {
+      flip(index);
+    }
+  });
+  lockGameProgress = false;
+}
+
+listOfCardsPositions.addEventListener("click", clickCard);
