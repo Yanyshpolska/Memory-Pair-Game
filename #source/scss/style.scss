@@ -15,6 +15,10 @@ html {
   -moz-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
 }
+img {
+  width: 100%;
+  height: 100%;
+}
 input {
   cursor: pointer;
   font-family: inherit;
@@ -70,14 +74,21 @@ input {
   grid-template-columns: repeat(6, 1fr);
   justify-items: center;
 
-  //   &__card__holder {
-  //   }
+  &__card__container {
+    perspective: 1000px;
+  }
+  &__card__container:hover,
+  &__card {
+    transform: rotateY(180deg);
+  }
 
   &__card {
     cursor: pointer;
 
     transition: all 0.8s ease 0s;
     transform-style: preserve-3d;
+    transform: rotateY(0deg);
+
     position: relative;
     width: 12vw;
     height: 12vw;
@@ -94,42 +105,26 @@ input {
   //   &__card__holder:hover &__card {
   //     transform: rotateY(-180deg);
   //   }
-  &__card-front {
-    //  width: 100%;
-    //  height: 100%;
-    //  position: absolute;
-    //  border: 0.15rem solid #684a4a50;
-    //  border-radius: 0.3rem;
 
-    //  z-index: 2;
-    //  transform: rotateY(0deg);
-    //  background-color: #77608d;
-    //  backface-visibility: hidden;
-    width: 100%;
-    height: 100%;
-    position: absolute;
+  &__card-back,
+  &__card-front {
     border: 0.15rem solid #684a4a;
     border-radius: 0.3rem;
-    transform: rotateY(-180deg);
+
+    position: absolute;
+    //   display: block;
+    //  width: 100%;
+    //  height: 100%;
+    backface-visibility: hidden;
+  }
+
+  &__card-front {
+    z-index: 2;
+    transform: rotateY(0deg);
   }
 
   &__card-back {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    border: 0.15rem solid #684a4a;
-    border-radius: 0.3rem;
-
-    z-index: 2;
-    transform: rotateY(0deg);
-    background-color: #77608d;
-    backface-visibility: hidden;
-    //  width: 100%;
-    //  height: 100%;
-    //  position: absolute;
-    //  border: 0.15rem solid #684a4a50;
-    //  border-radius: 0.3rem;
-    //  transform: rotateY(-180deg);
+    transform: rotateY(180deg); //==================back
   }
 
   @media (max-width: 800px) {
@@ -137,5 +132,18 @@ input {
   }
   @media (max-width: 500px) {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+.game {
+  &__card-container {
+  }
+
+  &__card {
+  }
+
+  &__card-front {
+  }
+
+  &__card-back {
   }
 }

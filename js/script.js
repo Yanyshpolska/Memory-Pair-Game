@@ -10,6 +10,9 @@ const gameCards = [
 
 const arrayOfCards = [...gameCards, ...gameCards];
 
+let cardsArray = [];
+let listOfCardsPositions;
+
 const newGame = function () {
   arrayOfCards.sort(function () {
     return 0.5 - Math.random();
@@ -21,57 +24,70 @@ const newGame = function () {
   for (let card of arrayOfCards) {
     const gameCard = document.createElement("div");
     gameCard.classList.add("game__card");
-    gameCard.style["transform"] = "rotateY(0deg)"; //// try to delete
-
-    const cardFront = document.createElement("img");
-    cardFront.classList.add("game__card-front");
-    cardFront.setAttribute("alt", `${card.alt}`);
-    cardFront.setAttribute("src", `${card.link}`);
+    gameCard.style["transform"] = "rotateY(0deg)";
+    const cardHolder = document.createElement("div");
+    cardHolder.classList.add("game__card-container");
 
     const cardBack = document.createElement("img");
     cardBack.classList.add("game__card-back");
-    cardBack.setAttribute("alt", "???");
-    cardBack.setAttribute("src", "./img/back.jpg");
-    cardBack.setAttribute("data-id", `${card.id}`);
+    cardBack.setAttribute("alt", `${card.alt}`);
+    cardBack.setAttribute("src", `${card.link}`);
+
+    const cardFront = document.createElement("img");
+    cardFront.classList.add("game__card-front");
+    cardFront.setAttribute("alt", "???");
+    cardFront.setAttribute("src", "./img/back.jpg");
+    cardFront.setAttribute("data-id", `${card.id}`);
 
     gameCard.append(cardBack);
     gameCard.append(cardFront);
-    gameArea.append(gameCard);
+    cardHolder.append(gameCard);
+    gameArea.append(cardHolder);
   }
+
+  listOfCardsPositions = document.querySelector(".game");
+
+  cardsArray = Array.from(listOfCardsPositions.childNodes).map(
+    (parent) => parent.firstChild
+  );
+  //   isSecondCard = false;
 };
-
-const pressButton = document.querySelector(".container__new-game");
-pressButton.addEventListener("click", newGame);
-newGame();
-
-const listOfCardsPositions = document.querySelector(".game");
 
 let isSecondCard = false;
 let lockGameProgress = false;
 let firstCardID;
 
+const pressButton = document.querySelector(".container__new-game");
+pressButton.addEventListener("click", newGame);
+newGame();
+
 function flip(cardId) {
-  console.log(cardId);
-
-  console.log(listOfCardsPositions.childNodes[cardId]);
-
-  listOfCardsPositions.childNodes[cardId].style["transform"] =
-    listOfCardsPositions.childNodes[cardId].style["transform"] ===
-    "rotateY(-180deg)"
+  //   console.log(cardsArray[cardId]);
+  cardsArray[cardId].style["transform"] =
+    cardsArray[cardId].style["transform"] === "rotateY(-180deg)"
       ? "rotateY(0deg)"
       : "rotateY(-180deg)";
 }
 
 function clickCard(event) {
+  console.log("click");
+
   if (lockGameProgress) {
     return;
   }
+
   if (event.target.dataset.id === undefined) {
     return;
   }
+
+  if (event.target.parentElement.firstChild.style["opacity"] === "0.5") {
+    return;
+  }
+
   const currentCardId = Array.from(
-    event.target.parentElement.parentElement.children
-  ).indexOf(event.target.parentElement);
+    event.target.parentElement.parentElement.parentElement.children
+  ).indexOf(event.target.parentElement.parentElement);
+  console.log(currentCardId);
 
   if (isSecondCard) {
     flip(currentCardId);
@@ -84,6 +100,8 @@ function clickCard(event) {
       setTimeout(flipBack, 1000);
     }
   } else {
+    console.log("first click");
+
     isSecondCard = true;
     firstCardID = currentCardId;
     flip(currentCardId);
@@ -91,29 +109,27 @@ function clickCard(event) {
 }
 
 function compareCards(firstCardID, currentCardId) {
-  return listOfCardsPositions.childNodes[firstCardID].childNodes[0].dataset
-    .id ===
-    listOfCardsPositions.childNodes[currentCardId].childNodes[0].dataset.id
+  return cardsArray[firstCardID].lastChild.dataset.id ===
+    cardsArray[currentCardId].lastChild.dataset.id
     ? true
     : false;
 }
 function changeOpacity() {
-  const cardsArray = Array.from(listOfCardsPositions.childNodes);
   cardsArray.map((child) => {
     if (child.style["transform"] === "rotateY(-180deg)") {
-      child.style["opacity"] = "0.5";
+      child.firstChild.style["opacity"] = "0.5";
     }
   });
   lockGameProgress = false;
 }
 
 function flipBack() {
-  const cardsArray = Array.from(listOfCardsPositions.childNodes);
+  //   const cardsArray = Array.from(listOfCardsPositions.childNodes);
 
   cardsArray.map((child, index) => {
     if (
       child.style["transform"] === "rotateY(-180deg)" &&
-      child.style["opacity"] !== "0.5"
+      child.firstChild.style["opacity"] !== "0.5"
     ) {
       flip(index);
     }
