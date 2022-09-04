@@ -10,8 +10,11 @@ const gameCards = [
 
 const arrayOfCards = [...gameCards, ...gameCards];
 
-let cardsArray = [];
 let listOfCardsPositions;
+let cardsArray = [];
+let isSecondCard = false;
+let lockGameProgress = false;
+let firstCardID;
 
 const newGame = function () {
   arrayOfCards.sort(function () {
@@ -50,19 +53,15 @@ const newGame = function () {
   cardsArray = Array.from(listOfCardsPositions.childNodes).map(
     (parent) => parent.firstChild
   );
-  //   isSecondCard = false;
+  isSecondCard = false;
+  lockGameProgress = false;
 };
-
-let isSecondCard = false;
-let lockGameProgress = false;
-let firstCardID;
 
 const pressButton = document.querySelector(".container__new-game");
 pressButton.addEventListener("click", newGame);
 newGame();
 
 function flip(cardId) {
-  //   console.log(cardsArray[cardId]);
   cardsArray[cardId].style["transform"] =
     cardsArray[cardId].style["transform"] === "rotateY(-180deg)"
       ? "rotateY(0deg)"
@@ -95,9 +94,9 @@ function clickCard(event) {
     lockGameProgress = true;
 
     if (compareCards(firstCardID, currentCardId)) {
-      setTimeout(changeOpacity, 1000);
+      setTimeout(changeOpacity, 800);
     } else {
-      setTimeout(flipBack, 1000);
+      setTimeout(flipBack, 800);
     }
   } else {
     console.log("first click");
@@ -124,8 +123,6 @@ function changeOpacity() {
 }
 
 function flipBack() {
-  //   const cardsArray = Array.from(listOfCardsPositions.childNodes);
-
   cardsArray.map((child, index) => {
     if (
       child.style["transform"] === "rotateY(-180deg)" &&
