@@ -27,11 +27,15 @@ input {
   margin: 1em auto;
 }
 .container__title {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   font-size: 2.5em;
   text-align: center;
   margin-bottom: 0.5em;
 }
-@media (max-width: 500px) {
+@media (max-width: 800px) {
   .container__title {
     font-size: 2em;
   }
@@ -44,14 +48,15 @@ input {
   border-radius: 0.3em;
   background-color: rgba(104, 74, 74, 0.3137254902);
 }
-@media (max-width: 500px) {
-  .container__new-game {
-    font-size: 1em;
+@media (max-width: 900px) {
+  .container {
+    margin: 0 auto 0.5em;
   }
 }
-@media (max-width: 500px) {
+@media (max-width: 800px) {
   .container {
-    max-width: 90vw;
+    font-size: 0.7em;
+    padding: 0.2em;
   }
 }
 
@@ -77,12 +82,6 @@ input {
   height: 12vw;
   margin-bottom: 1vw;
 }
-@media (max-width: 800px) {
-  .game__card {
-    width: 19vw;
-    height: 19vw;
-  }
-}
 @media (max-width: 500px) {
   .game__card {
     width: 28vw;
@@ -106,12 +105,6 @@ input {
 .game__card-back {
   -webkit-transform: rotateY(180deg);
           transform: rotateY(180deg);
-}
-@media (max-width: 800px) {
-  .game {
-    -ms-grid-columns: (1fr)[4];
-    grid-template-columns: repeat(4, 1fr);
-  }
 }
 @media (max-width: 500px) {
   .game {
