@@ -35,9 +35,16 @@ input {
   text-align: center;
   margin-bottom: 0.5em;
 }
-@media (max-width: 800px) {
+@media (max-width: 900px) {
+  .container__title {
+    font-size: 1.5em;
+    margin-bottom: 0.67em;
+  }
+}
+@media (max-width: 500px) {
   .container__title {
     font-size: 2em;
+    margin-bottom: 0.5em;
   }
 }
 .container__new-game {
@@ -49,14 +56,14 @@ input {
   background-color: rgba(104, 74, 74, 0.3137254902);
 }
 @media (max-width: 900px) {
-  .container {
-    margin: 0 auto 0.5em;
+  .container__new-game {
+    font-size: 1em;
+    padding: 0.3em;
   }
 }
-@media (max-width: 800px) {
+@media (max-width: 500px) {
   .container {
-    font-size: 0.7em;
-    padding: 0.2em;
+    max-width: 90vw;
   }
 }
 
